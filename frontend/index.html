@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Real Estate Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; padding: 0; }
+    h2 { background: #f4f4f4; padding: 10px; }
+    .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+    .section label { display: block; margin-top: 8px; }
+    .section input, .section select, .section textarea { width: 100%; padding: 5px; margin: 4px 0 10px; }
+    .section button { padding: 6px 12px; cursor: pointer; }
+    pre.output { background: #eef; padding: 10px; white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+
+  <h1>AI-Powered Real Estate Platform</h1>
+  <p>Use the tools below to analyze and plan your real estate project. Fill in the inputs for a section and click the button to get results.</p>
+
+  <!-- 1. Property Cost & Trend Evaluation -->
+  <div class="section" id="section-evaluate">
+    <h2>1. Property Cost & Trend Evaluation</h2>
+    <label for="eval-address">Property Address:</label>
+    <input type="text" id="eval-address" placeholder="123 Main St">
+    <label for="eval-city">City:</label>
+    <input type="text" id="eval-city" placeholder="City">
+    <label for="eval-state">State/Region:</label>
+    <input type="text" id="eval-state" placeholder="State or Region">
+    <label for="eval-price">Current Price (optional):</label>
+    <input type="number" id="eval-price" placeholder="e.g. 500000">
+    <button onclick="evaluateProperty()">Evaluate Property</button>
+    <pre id="eval-output" class="output"></pre>
+  </div>
+
+  <!-- 2. Zoning Optimizer -->
+  <div class="section" id="section-zoning">
+    <h2>2. Zoning Optimizer</h2>
+    <label for="zone-code">Zoning Code:</label>
+    <input type="text" id="zone-code" placeholder="e.g. R3, C2">
+    <label for="lot-size">Lot Size (sqft):</label>
+    <input type="number" id="lot-size" placeholder="e.g. 5000">
+    <button onclick="optimizeZoning()">Optimize Zoning</button>
+    <pre id="zoning-output" class="output"></pre>
+  </div>
+
+  <!-- 3. Marketing Plan Generator -->
+  <div class="section" id="section-marketing">
+    <h2>3. Marketing Plan Generator</h2>
+    <label for="proj-type">Project Type:</label>
+    <input type="text" id="proj-type" placeholder="e.g. Luxury Condo">
+    <label for="marketing-budget">Marketing Budget ($):</label>
+    <input type="number" id="marketing-budget" placeholder="e.g. 10000">
+    <label for="target-audience">Target Audience:</label>
+    <input type="text" id="target-audience" placeholder="e.g. Young professionals">
+    <button onclick="generateMarketingPlan()">Generate Marketing Plan</button>
+    <pre id="marketing-output" class="output"></pre>
+  </div>
+
+  <!-- 4. Financial Model -->
+  <div class="section" id="section-financial">
+    <h2>4. Financial Model</h2>
+    <label for="land-cost">Land Cost ($):</label>
+    <input type="number" id="land-cost" placeholder="e.g. 200000">
+    <label for="const-cost">Construction Cost ($):</label>
+    <input type="number" id="const-cost" placeholder="e.g. 800000">
+    <label for="fin-rate">Financing Rate (%):</label>
+    <input type="number" id="fin-rate" placeholder="e.g. 5">
+    <label for="sell-price">Exit Sale Price ($):</label>
+    <input type="number" id="sell-price" placeholder="If selling upon completion">
+    <label for="hold-rent">Annual Rent ($):</label>
+    <input type="number" id="hold-rent" placeholder="If holding for rent">
+    <label for="hold-years">Hold Period (years):</label>
+    <input type="number" id="hold-years" placeholder="e.g. 5">
+    <button onclick="runFinancialModel()">Run Financial Model</button>
+    <pre id="financial-output" class="output"></pre>
+  </div>
+
+  <!-- 5. Scenario Planner -->
+  <div class="section" id="section-scenario">
+    <h2>5. Scenario Planner</h2>
+    <p>Uses the financial model above. (For simplicity, this demo uses preset scenario variations.)</p>
+    <button onclick="runScenarioPlanner()">Compare Scenarios</button>
+    <pre id="scenario-output" class="output"></pre>
+  </div>
+
+  <!-- 6. Construction Material Estimate -->
+  <div class="section" id="section-materials">
+    <h2>6. Construction Materials & Cost Estimation</h2>
+    <label for="build-size">Building Size (sqft):</label>
+    <input type="number" id="build-size" placeholder="e.g. 10000">
+    <label for="build-type">Building Type:</label>
+    <input type="text" id="build-type" placeholder="e.g. Residential">
+    <button onclick="estimateMaterials()">Estimate Materials</button>
+    <pre id="materials-output" class="output"></pre>
+  </div>
+
+  <!-- 7. Project Management Checklist -->
+  <div class="section" id="section-pm">
+    <h2>7. Project Management Checklist</h2>
+    <button onclick="getChecklist()">Get Standard Checklist</button>
+    <pre id="pm-output" class="output"></pre>
+  </div>
+
+  <!-- 8. 3D Virtual Property Model -->
+  <div class="section" id="section-3d">
+    <h2>8. 3D Virtual Property Model</h2>
+    <p>A 3D model preview (placeholder in demo):</p>
+    <div id="model-viewer" style="height: 300px; background: #ccc; display: flex; align-items: center; justify-content: center;">
+      [3D Model would display here]
+    </div>
+    <!-- In a real app, we would use <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+         and some JS to load and display a model, or embed a Sketchfab viewer iframe. -->
+    <button onclick="fetchModel()">Load 3D Model Info</button>
+    <pre id="model-output" class="output"></pre>
+  </div>
+
+  <!-- 9. ROI Heatmap -->
+  <div class="section" id="section-roi">
+    <h2>9. ROI Heatmap</h2>
+    <button onclick="getROIHeatmap()">Generate ROI Heatmap Data</button>
+    <pre id="roi-output" class="output"></pre>
+    <!-- For a real heatmap visualization, we would use the data to draw a grid or chart. -->
+  </div>
+
+  <!-- 10. Tax Optimization -->
+  <div class="section" id="section-tax">
+    <h2>10. Tax Optimization Strategies</h2>
+    <button onclick="getTaxStrategies()">Get Tax Strategies</button>
+    <pre id="tax-output" class="output"></pre>
+  </div>
+
+  <!-- 11. Land Assembly Tool -->
+  <div class="section" id="section-land">
+    <h2>11. Land Assembly Suggestions</h2>
+    <label for="land-address">Property Address:</label>
+    <input type="text" id="land-address" placeholder="e.g. 123 Main St">
+    <button onclick="assembleLand()">Find Nearby Parcels</button>
+    <pre id="land-output" class="output"></pre>
+  </div>
+
+  <!-- 12. Regulation Compliance Checker -->
+  <div class="section" id="section-compliance">
+    <h2>12. Regulation Compliance Checker</h2>
+    <p>(Uses the checklist from feature 7 as input for demo)</p>
+    <button onclick="checkCompliance()">Run Compliance Check</button>
+    <pre id="compliance-output" class="output"></pre>
+  </div>
+
+  <!-- 13. Design Appeal Predictor -->
+  <div class="section" id="section-appeal">
+    <h2>13. Design Appeal Predictor</h2>
+    <label for="design-style">Design Style:</label>
+    <input type="text" id="design-style" placeholder="e.g. modern, traditional">
+    <label for="design-features">Key Features (comma separated):</label>
+    <input type="text" id="design-features" placeholder="e.g. Open Floor Plan, Natural Light">
+    <!-- If image upload: <input type="file" id="design-image"> would be used with FormData -->
+    <button onclick="predictAppeal()">Predict Appeal</button>
+    <pre id="appeal-output" class="output"></pre>
+  </div>
+
+  <!-- 14. Hyperlocal Demand Forecaster -->
+  <div class="section" id="section-demand">
+    <h2>14. Hyperlocal Demand Forecaster</h2>
+    <label for="demand-area">Area (City/Neighborhood):</label>
+    <input type="text" id="demand-area" placeholder="e.g. Downtown Seattle">
+    <label for="property-type">Property Type:</label>
+    <input type="text" id="property-type" placeholder="e.g. Residential">
+    <label for="forecast-years">Years to Forecast:</label>
+    <input type="number" id="forecast-years" value="5">
+    <button onclick="forecastDemand()">Forecast Demand</button>
+    <pre id="demand-output" class="output"></pre>
+  </div>
+
+  <!-- 15. Risk Simulation Tool -->
+  <div class="section" id="section-risk">
+    <h2>15. Risk Simulation (Monte Carlo)</h2>
+    <label for="base-roi">Expected Base ROI (%):</label>
+    <input type="number" id="base-roi" placeholder="e.g. 15">
+    <label for="var-cost">Cost Variance (+/- %):</label>
+    <input type="number" id="var-cost" value="10">
+    <label for="var-demand">Demand Variance (+/- %):</label>
+    <input type="number" id="var-demand" value="10">
+    <label for="var-price">Price Variance (+/- %):</label>
+    <input type="number" id="var-price" value="10">
+    <button onclick="runRiskSimulation()">Run Risk Simulation</button>
+    <pre id="risk-output" class="output"></pre>
+  </div>
+
+<script>
+  const apiBase = ""; // base URL for API (empty string if same domain, or e.g. "http://localhost:8000")
+
+  async function evaluateProperty() {
+    const data = {
+      address: document.getElementById('eval-address').value,
+      city: document.getElementById('eval-city').value,
+      state: document.getElementById('eval-state').value,
+      current_price: parseFloat(document.getElementById('eval-price').value) || undefined
+    };
+    const res = await fetch(apiBase + "/evaluate", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('eval-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function optimizeZoning() {
+    const data = {
+      zone_code: document.getElementById('zone-code').value,
+      lot_size_sqft: parseFloat(document.getElementById('lot-size').value || "0")
+    };
+    const res = await fetch(apiBase + "/optimize-zoning", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('zoning-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function generateMarketingPlan() {
+    const data = {
+      project_type: document.getElementById('proj-type').value,
+      budget: parseFloat(document.getElementById('marketing-budget').value || "0"),
+      target_audience: document.getElementById('target-audience').value
+    };
+    const res = await fetch(apiBase + "/marketing-plan", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    // Format output nicely
+    let outputText = "Channels: " + result.channels.join(", ") + "\n\n";
+    outputText += "Budget Allocation:\n";
+    for (let ch in result.budget_allocation) {
+      outputText += `  ${ch}: $${result.budget_allocation[ch]}\n`;
+    }
+    outputText += "\nKPI Targets:\n";
+    for (let k in result.kpi_targets) {
+      outputText += `  ${k}: ${result.kpi_targets[k]}\n`;
+    }
+    outputText += "\nSummary:\n" + result.summary;
+    document.getElementById('marketing-output').textContent = outputText;
+  }
+
+  async function runFinancialModel() {
+    const data = {
+      project_cost: (parseFloat(document.getElementById('land-cost').value) || 0) + (parseFloat(document.getElementById('const-cost').value) || 0),
+      land_cost: parseFloat(document.getElementById('land-cost').value) || 0,
+      construction_cost: parseFloat(document.getElementById('const-cost').value) || 0,
+      financing_rate: parseFloat(document.getElementById('fin-rate').value) || 0,
+      sell_price: parseFloat(document.getElementById('sell-price').value) || undefined,
+      hold_rent: parseFloat(document.getElementById('hold-rent').value) || undefined,
+      hold_years: parseInt(document.getElementById('hold-years').value) || undefined
+    };
+    const res = await fetch(apiBase + "/financial-model", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('financial-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function runScenarioPlanner() {
+    // For demo, we'll create two scenarios from the base case (modifying cost ±10%)
+    const base = {
+      project_cost: 1000000, land_cost: 200000, construction_cost: 800000,
+      financing_rate: 5, sell_price: 1200000
+    };
+    const scenarios = [
+      { name: "Value Engineer -10% Cost", construction_cost: 720000 },
+      { name: "Overrun +10% Cost", construction_cost: 880000 }
+    ];
+    const data = { base_case: base, scenarios: scenarios };
+    const res = await fetch(apiBase + "/scenario-planner", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('scenario-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function estimateMaterials() {
+    const data = {
+      building_size_sqft: parseFloat(document.getElementById('build-size').value) || 0,
+      building_type: document.getElementById('build-type').value || "Residential"
+    };
+    const res = await fetch(apiBase + "/materials-estimate", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('materials-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function getChecklist() {
+    const res = await fetch(apiBase + "/project-checklist");
+    const result = await res.json();
+    document.getElementById('pm-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function fetchModel() {
+    const res = await fetch(apiBase + "/3d-model");
+    const result = await res.json();
+    document.getElementById('model-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function getROIHeatmap() {
+    const res = await fetch(apiBase + "/roi-heatmap");
+    const result = await res.json();
+    document.getElementById('roi-output').textContent = JSON.stringify(result, null, 2);
+    // In a real app, use result.roi_matrix to draw a heatmap.
+  }
+
+  async function getTaxStrategies() {
+    const res = await fetch(apiBase + "/tax-optimization", { method: "POST" });
+    const result = await res.json();
+    // result.strategies is an array of strings
+    document.getElementById('tax-output').textContent = result.strategies.join("\n- ");
+  }
+
+  async function assembleLand() {
+    // For demo, we'll just return a dummy suggestion instead of real API call.
+    const address = document.getElementById('land-address').value;
+    let dummy = `For ${address}: Consider acquiring the adjacent lot to the north (approx 0.4 acres) to expand development potential.`;
+    document.getElementById('land-output').textContent = dummy;
+    // A real implementation would call an API or backend logic to find actual parcels.
+  }
+
+  async function checkCompliance() {
+    // Use the earlier fetched checklist as input if available
+    const outputElem = document.getElementById('pm-output').textContent;
+    let checklist = [];
+    try {
+      checklist = JSON.parse(outputElem);
+    } catch {}
+    const res = await fetch(apiBase + "/compliance-checker", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(checklist)
+    });
+    const result = await res.json();
+    document.getElementById('compliance-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function predictAppeal() {
+    const style = document.getElementById('design-style').value;
+    const featuresStr = document.getElementById('design-features').value;
+    const features = featuresStr ? featuresStr.split(",").map(s => s.trim()) : null;
+    const data = { style: style, features: features };
+    const res = await fetch(apiBase + "/appeal-predict", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('appeal-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function forecastDemand() {
+    const data = {
+      area: document.getElementById('demand-area').value,
+      property_type: document.getElementById('property-type').value,
+      years: parseInt(document.getElementById('forecast-years').value) || 5
+    };
+    const res = await fetch(apiBase + "/forecast-demand", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('demand-output').textContent = JSON.stringify(result, null, 2);
+  }
+
+  async function runRiskSimulation() {
+    const data = {
+      base_roi: parseFloat(document.getElementById('base-roi').value) || 0,
+      cost_variance_pct: parseFloat(document.getElementById('var-cost').value)/100 || 0.1,
+      demand_variance_pct: parseFloat(document.getElementById('var-demand').value)/100 || 0.1,
+      price_variance_pct: parseFloat(document.getElementById('var-price').value)/100 || 0.1,
+      iterations: 1000
+    };
+    const res = await fetch(apiBase + "/risk-simulation", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    document.getElementById('risk-output').textContent = JSON.stringify(result, null, 2);
+  }
+</script>
+
+</body>
+</html>
+ 
